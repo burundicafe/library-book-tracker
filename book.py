@@ -22,3 +22,8 @@ class Book:
         book = cls(data["title"], data["author"], data["year_published"])
         book.read = data["read"]
         return book
+    @classmethod
+    def from_tuple(cls, row):
+        book = cls(row[1], row[2], row[3])
+        book.read = bool(row[4])
+        return book

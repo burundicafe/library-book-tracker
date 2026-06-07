@@ -1,8 +1,8 @@
 import time
-import json
 from book import Book    
 from storage import save_library, load_library
 from search import search_books
+from db import init_db
 
 # Library
 library = []
@@ -24,10 +24,8 @@ def display_books(book_list):
 
 
 
-try:
-    library = load_library()
-except FileNotFoundError:
-    library = []
+init_db()
+library = load_library()
 
 print("\nWelcome to the Library!")
 
@@ -84,7 +82,10 @@ while True:
     elif choice == '4':
         # view unread books
         unread = [book for book in library if not book.read]
-        display_books(unread)
+        if not unread:
+            print("You must be smart, you have no unread books!")
+        else:
+            display_books(unread)
     elif choice == '5':
         #exit
         save_library(library)
