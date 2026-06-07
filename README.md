@@ -6,4 +6,4 @@ Features:
 - Search for books using the Open Library API
 - Add books to your library
 - Mark books as read
-- Save and load your library from a JSON file
+- Save and load your library from a db
