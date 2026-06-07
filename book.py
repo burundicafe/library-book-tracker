@@ -8,9 +8,8 @@ class Book:
         self.read = False
 
     def get_description(self):
-        status = "Read" if self.read else "Unread"
-        return f"{self.title} by {self.author} ({self.year_published}) - {status}"
-    
+        return f"{self.title} by {self.author} ({self.year_published}) - {'Read' if self.read else 'Unread'}"
+
     def to_dict(self):
         return {
             "title": self.title,
