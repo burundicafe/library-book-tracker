@@ -1,19 +1,21 @@
 # db
 
-import sqlite3
+import psycopg2
 
 def init_db():
-    conn = sqlite3.connect('library.db')
+    conn = psycopg2.connect(
+        dbname='library',
+        user='michaelgibbons',
+        host="localhost"
+    )
     cursor = conn.cursor()
     cursor.execute('''CREATE TABLE IF NOT EXISTS books (
-                        id INTEGER PRIMARY KEY AUTOINCREMENT,
+                        id SERIAL PRIMARY KEY,
                         title TEXT,
                         author TEXT,
                         year_published INTEGER,
-                        read INTEGER DEFAULT 0
+                        read BOOLEAN DEFAULT FALSE
                     )
                    ''')
     conn.commit()
     conn.close()
-
-init_db()
