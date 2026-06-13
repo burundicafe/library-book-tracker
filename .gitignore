@@ -3,3 +3,4 @@ venv/
 __pycache__/
 *.pyc
 libraryproject/libraryproject/settings.py
+libraryproject/runDjango.py
