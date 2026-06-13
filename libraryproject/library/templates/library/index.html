@@ -290,7 +290,7 @@ td strong {
                 </thead>
                 <tbody>
                     {% for book in books %}
-                    <tr class="clickable-dashboard-row" onclick="window.location='{% url 'book_detail' pk=book.pk %}'">
+<tr class="clickable-dashboard-row" data-url="{% url 'book_detail' pk=book.pk %}" onclick="navigateToBook(this)">
                         <td>
                             <strong style="color: #4a3e3d;">{{ book.title }}</strong>
                         </td>
@@ -314,7 +314,7 @@ td strong {
                                 
                                 <form method="POST" action="{% url 'delete_book' pk=book.pk %}" style="margin: 0; display: inline;" onclick="event.stopPropagation();">
                                     {% csrf_token %}
-                                    <button type="submit" class="row-delete-indicator" onclick="return confirm('Are you sure you want to delete this book?');">Delete</button>
+                                    <button type="submit" class="row-delete-indicator" onclick="return confirm('Are you sure you want to delete this book?');">ÍÍDelete</button>
                                 </form>
                             </div>
                         </td>
