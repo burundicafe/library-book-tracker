@@ -5,6 +5,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Book List</title>
     <style>
+        /* Keeps the book title from wrapping to a new line */
+td strong {
+    white-space: nowrap;
+}
         /* Base styles & Warm, muted light brown background */
         body {
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
@@ -17,15 +21,58 @@
             align-items: center;
         }
 
-        /* Centered Header */
-        h1.main-header {
-            text-align: center;
-            font-size: 1.8rem;
-            color: #4a3e3d;
+        /* New outer wrapper to bind widths together */
+        .layout-wrapper {
+            width: 100%;
+            max-width: 900px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Add relative positioning to keep the layout context clean */
+        .header-container {
+            display: flex;
+            align-items: center;
+            justify-content: center; /* Forces the flex content to true center */
+            width: 100%;
             margin-top: 20px;
             margin-bottom: 30px;
+            position: relative; /* Context for the absolute button */
+        }
+
+        /* Remove the padding-left constraint */
+        h1.main-header {
+            font-size: 1.8rem;
+            color: #4a3e3d;
             font-weight: 600;
             letter-spacing: -0.5px;
+            margin: 0;
+            text-align: center;
+        }
+
+        /* Pull the button completely out of the centering flow */
+        .nav-container {
+            position: absolute;
+            right: 0;
+            display: flex;
+            align-items: center;
+        }
+
+        /* Navigation Button Style */
+        .nav-button {
+            text-decoration: none;
+            padding: 10px 20px;
+            font-size: 0.9rem;
+            background-color: #4a3e3d;
+            color: #ffffff;
+            border-radius: 6px;
+            font-weight: 500;
+            transition: background-color 0.2s;
+            white-space: nowrap;
+        }
+
+        .nav-button:hover {
+            background-color: #5c534c;
         }
 
         /* Main entity container to set the table off from the background */
@@ -42,7 +89,7 @@
             -webkit-overflow-scrolling: touch;
         }
 
-        /* Clean, modernized table design drawing inspiration from image_c4a65b.png */
+        /* Clean, modernized table design */
         table {
             width: 100%;
             border-collapse: collapse;
@@ -69,9 +116,46 @@
             color: #4a4a4a;
         }
 
-        /* Row hover effect for scannability */
-        tbody tr:hover {
-            background-color: #fdfcfb;
+        /* Row hover effect matching your design system specification */
+        tbody tr.clickable-dashboard-row {
+            cursor: pointer;
+            transition: background-color 0.15s ease;
+        }
+
+        tbody tr.clickable-dashboard-row:hover {
+            background-color: #f4f0ea;
+        }
+
+        /* Layout structure for the status cell action trigger hook */
+        .status-cell-wrapper {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 15px;
+        }
+
+        /* Contextual Delete Action Button Component */
+        .row-delete-indicator {
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: #8c433e; /* Muted Red text color */
+            background-color: #f5eceb; /* Muted Red badge background */
+            padding: 4px 10px;
+            border-radius: 4px;
+            border: none;
+            cursor: pointer;
+            opacity: 0;
+            transform: translateX(5px);
+            transition: opacity 0.2s ease, transform 0.2s ease, background-color 0.15s;
+        }
+
+        .row-delete-indicator:hover {
+            background-color: #ebdcdb;
+        }
+
+        tbody tr.clickable-dashboard-row:hover .row-delete-indicator {
+            opacity: 1;
+            transform: translateX(0);
         }
 
         /* Optional status badge styling for Read/Unread statuses */
@@ -96,9 +180,21 @@
             body {
                 padding: 12px;
             }
+            .header-container {
+                flex-direction: column;
+                gap: 15px;
+                margin-bottom: 20px;
+            }
             h1.main-header {
                 font-size: 1.5rem;
-                margin-bottom: 20px;
+                margin: 0;
+            }
+            .nav-container {
+                width: 100%;
+            }
+            .nav-button {
+                width: 100%;
+                text-align: center;
             }
             .table-container {
                 padding: 12px;
@@ -111,45 +207,127 @@
             th {
                 font-size: 0.7rem;
             }
+            .row-delete-indicator {
+                opacity: 1; /* Retain visibility for touchscreen profiles */
+                transform: none;
+            }
+        }
+
+        /* Toast Notification Box */
+        .toast-container {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 1000;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            opacity: 1;
+            transform: translateY(0);
+            transition: opacity 0.5s ease, transform 0.5s ease;
+        }
+
+        .toast-container.fade-out {
+            opacity: 0;
+            transform: translateY(-20px);
+        }
+
+        .toast-box {
+            background-color: #2e6557; /* Matches your 'Read' badge green theme */
+            color: #ffffff;
+            padding: 14px 24px;
+            border-radius: 6px;
+            font-size: 0.95rem;
+            font-weight: 500;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            min-width: 250px;
+            text-align: center;
         }
     </style>
 </head>
 <body>
 
-    <!-- Centered Header -->
-    <h1 class="main-header">My Library</h1>
+    {% if messages %}
+        <div id="toast-container" class="toast-container">
+            {% for message in messages %}
+                <div class="toast-box {{ message.tags }}">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        </div>
 
-    <!-- Isolated Table Entity Container -->
-    <div class="table-container">
-        <table>
-            <thead>
-                <tr>
-                    <th>Title</th>
-                    <th>Author</th>
-                    <th>Publisher</th>
-                    <th>Year Published</th>
-                    <th>Read Status</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for book in books %}
-                <tr>
-                    <td><strong>{{ book.title }}</strong></td>
-                    <td>{{ book.author }}</td>
-                    <td>{{ book.publisher }}</td>
-                    <td>{{ book.year_published }}</td>
-                    <td>
-                        {% if book.read %}
-                            <span class="status-badge status-read">Read</span>
-                        {% else %}
-                            <span class="status-badge status-unread">Unread</span>
-                        {% endif %}
-                    </td>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
-    </div>
+        <script>
+            setTimeout(function() {
+                var container = document.getElementById('toast-container');
+                if (container) {
+                    container.classList.add('fade-out');
+                    setTimeout(function() { container.remove(); }, 500);
+                }
+            }, 3000);
+        </script>
+    {% endif %}
 
+    <div class="layout-wrapper">
+
+        <div class="header-container">
+            <h1 class="main-header">My Library</h1>
+            <div class="nav-container">
+                <a href="{% url 'search_books' %}" class="nav-button">Add a Book</a>
+            </div>
+        </div>
+
+        <div class="table-container">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Title</th>
+                        <th>Author</th>
+                        <th>Translator</th>
+                        <th>Publisher</th>
+                        <th>Year Published</th>
+                        <th>Read Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for book in books %}
+                    <tr class="clickable-dashboard-row" onclick="window.location='{% url 'book_detail' pk=book.pk %}'">
+                        <td>
+                            <strong style="color: #4a3e3d;">{{ book.title }}</strong>
+                        </td>
+                        <td>{{ book.author }}</td>
+                        <td>
+                            {% if book.translator %}
+                                {{ book.translator }}
+                            {% else %}
+                                <span style="color: #c4bebb;">—</span>
+                            {% endif %}
+                        </td>
+                        <td>{{ book.publisher }}</td>
+                        <td>{{ book.year_published }}</td>
+                        <td>
+                            <div class="status-cell-wrapper">
+                                {% if book.read %}
+                                    <span class="status-badge status-read">Read</span>
+                                {% else %}
+                                    <span class="status-badge status-unread">Unread</span>
+                                {% endif %}
+                                
+                                <form method="POST" action="{% url 'delete_book' pk=book.pk %}" style="margin: 0; display: inline;" onclick="event.stopPropagation();">
+                                    {% csrf_token %}
+                                    <button type="submit" class="row-delete-indicator" onclick="return confirm('Are you sure you want to delete this book?');">Delete</button>
+                                </form>
+                            </div>
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="6" style="text-align: center; color: #5c534c; padding: 24px;">Your library is completely empty. Click "Add a Book" to start your tracking index.</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+    </div> 
 </body>
 </html>
