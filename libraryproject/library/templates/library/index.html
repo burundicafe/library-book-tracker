@@ -4,37 +4,150 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Book List</title>
+    <style>
+        /* Base styles & Warm, muted light brown background */
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: #f4f0ea; /* Muted light brown / warm sand */
+            color: #333333;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        /* Centered Header */
+        h1.main-header {
+            text-align: center;
+            font-size: 1.8rem;
+            color: #4a3e3d;
+            margin-top: 20px;
+            margin-bottom: 30px;
+            font-weight: 600;
+            letter-spacing: -0.5px;
+        }
+
+        /* Main entity container to set the table off from the background */
+        .table-container {
+            background-color: #ffffff;
+            border: 1px solid #e1dcd6;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.04);
+            padding: 24px;
+            width: 100%;
+            max-width: 900px;
+            box-sizing: border-box;
+            overflow-x: auto; /* Enables horizontal swipe/scroll resizing on smaller screens like iPhone */
+            -webkit-overflow-scrolling: touch;
+        }
+
+        /* Clean, modernized table design drawing inspiration from image_c4a65b.png */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            text-align: left;
+            font-size: 0.95rem;
+        }
+
+        /* Header row styling */
+        th {
+            background-color: #f9f7f5;
+            color: #5c534c;
+            font-weight: 600;
+            text-transform: uppercase;
+            font-size: 0.75rem;
+            letter-spacing: 0.8px;
+            padding: 14px 16px;
+            border-bottom: 2px solid #e8e3dd;
+        }
+
+        /* Data row styling */
+        td {
+            padding: 14px 16px;
+            border-bottom: 1px solid #eeebe7;
+            color: #4a4a4a;
+        }
+
+        /* Row hover effect for scannability */
+        tbody tr:hover {
+            background-color: #fdfcfb;
+        }
+
+        /* Optional status badge styling for Read/Unread statuses */
+        .status-badge {
+            display: inline-block;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+        .status-read {
+            background-color: #e2ece9;
+            color: #2e6557;
+        }
+        .status-unread {
+            background-color: #f5eceb;
+            color: #8c433e;
+        }
+
+        /* iPhone and Mobile Responsive Adjustments */
+        @media (max-width: 480px) {
+            body {
+                padding: 12px;
+            }
+            h1.main-header {
+                font-size: 1.5rem;
+                margin-bottom: 20px;
+            }
+            .table-container {
+                padding: 12px;
+                border-radius: 6px;
+            }
+            th, td {
+                padding: 10px 12px;
+                font-size: 0.85rem;
+            }
+            th {
+                font-size: 0.7rem;
+            }
+        }
+    </style>
 </head>
 <body>
 
-    <h2>Book Collection</h2>
+    <!-- Centered Header -->
+    <h1 class="main-header">My Library</h1>
 
-    <table border="1" cellspacing="0" cellpadding="8">
-        <thead>
-            <tr>
-                <th>Title</th>
-                <th>Author</th>
-                <th>Year Published</th>
-                <th>Read Status</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for book in books %}
-            <tr>
-                <td>{{ book.title }}</td>
-                <td>{{ book.author }}</td>
-                <td>{{ book.year_published }}</td>
-                <td>
-                    {% if book.read %}
-                        Read
-                    {% else %}
-                        Unread
-                    {% endif %}
-                </td>
-            </tr>
-            {% endfor %}
-        </tbody>
-    </table>
+    <!-- Isolated Table Entity Container -->
+    <div class="table-container">
+        <table>
+            <thead>
+                <tr>
+                    <th>Title</th>
+                    <th>Author</th>
+                    <th>Year Published</th>
+                    <th>Read Status</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for book in books %}
+                <tr>
+                    <td><strong>{{ book.title }}</strong></td>
+                    <td>{{ book.author }}</td>
+                    <td>{{ book.year_published }}</td>
+                    <td>
+                        {% if book.read %}
+                            <span class="status-badge status-read">Read</span>
+                        {% else %}
+                            <span class="status-badge status-unread">Unread</span>
+                        {% endif %}
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
 
 </body>
 </html>
