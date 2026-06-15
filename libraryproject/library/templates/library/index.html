@@ -1,256 +1,19 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Book List</title>
-    <style>
-        /* Keeps the book title from wrapping to a new line */
-td strong {
-    white-space: nowrap;
-}
-        /* Base styles & Warm, muted light brown background */
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-            background-color: #f4f0ea; /* Muted light brown / warm sand */
-            color: #333333;
-            margin: 0;
-            padding: 20px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-        }
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
 
-        /* New outer wrapper to bind widths together */
-        .layout-wrapper {
-            width: 100%;
-            max-width: 900px;
-            display: flex;
-            flex-direction: column;
-        }
-
-        /* Add relative positioning to keep the layout context clean */
-        .header-container {
-            display: flex;
-            align-items: center;
-            justify-content: center; /* Forces the flex content to true center */
-            width: 100%;
-            margin-top: 20px;
-            margin-bottom: 30px;
-            position: relative; /* Context for the absolute button */
-        }
-
-        /* Remove the padding-left constraint */
-        h1.main-header {
-            font-size: 1.8rem;
-            color: #4a3e3d;
-            font-weight: 600;
-            letter-spacing: -0.5px;
-            margin: 0;
-            text-align: center;
-        }
-
-        /* Pull the button completely out of the centering flow */
-        .nav-container {
-            position: absolute;
-            right: 0;
-            display: flex;
-            align-items: center;
-        }
-
-        /* Navigation Button Style */
-        .nav-button {
-            text-decoration: none;
-            padding: 10px 20px;
-            font-size: 0.9rem;
-            background-color: #4a3e3d;
-            color: #ffffff;
-            border-radius: 6px;
-            font-weight: 500;
-            transition: background-color 0.2s;
-            white-space: nowrap;
-        }
-
-        .nav-button:hover {
-            background-color: #5c534c;
-        }
-
-        /* Main entity container to set the table off from the background */
-        .table-container {
-            background-color: #ffffff;
-            border: 1px solid #e1dcd6;
-            border-radius: 8px;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.04);
-            padding: 24px;
-            width: 100%;
-            max-width: 900px;
-            box-sizing: border-box;
-            overflow-x: auto; /* Enables horizontal swipe/scroll resizing on smaller screens like iPhone */
-            -webkit-overflow-scrolling: touch;
-        }
-
-        /* Clean, modernized table design */
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            text-align: left;
-            font-size: 0.95rem;
-        }
-
-        /* Header row styling */
-        th {
-            background-color: #f9f7f5;
-            color: #5c534c;
-            font-weight: 600;
-            text-transform: uppercase;
-            font-size: 0.75rem;
-            letter-spacing: 0.8px;
-            padding: 14px 16px;
-            border-bottom: 2px solid #e8e3dd;
-        }
-
-        /* Data row styling */
-        td {
-            padding: 14px 16px;
-            border-bottom: 1px solid #eeebe7;
-            color: #4a4a4a;
-        }
-
-        /* Row hover effect matching your design system specification */
-        tbody tr.clickable-dashboard-row {
-            cursor: pointer;
-            transition: background-color 0.15s ease;
-        }
-
-        tbody tr.clickable-dashboard-row:hover {
-            background-color: #f4f0ea;
-        }
-
-        /* Layout structure for the status cell action trigger hook */
-        .status-cell-wrapper {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            gap: 15px;
-        }
-
-        /* Contextual Delete Action Button Component */
-        .row-delete-indicator {
-            font-size: 0.8rem;
-            font-weight: 600;
-            color: #8c433e; /* Muted Red text color */
-            background-color: #f5eceb; /* Muted Red badge background */
-            padding: 4px 10px;
-            border-radius: 4px;
-            border: none;
-            cursor: pointer;
-            opacity: 0;
-            transform: translateX(5px);
-            transition: opacity 0.2s ease, transform 0.2s ease, background-color 0.15s;
-        }
-
-        .row-delete-indicator:hover {
-            background-color: #ebdcdb;
-        }
-
-        tbody tr.clickable-dashboard-row:hover .row-delete-indicator {
-            opacity: 1;
-            transform: translateX(0);
-        }
-
-        /* Optional status badge styling for Read/Unread statuses */
-        .status-badge {
-            display: inline-block;
-            padding: 4px 8px;
-            border-radius: 4px;
-            font-size: 0.8rem;
-            font-weight: 500;
-        }
-        .status-read {
-            background-color: #e2ece9;
-            color: #2e6557;
-        }
-        .status-unread {
-            background-color: #f5eceb;
-            color: #8c433e;
-        }
-
-        /* iPhone and Mobile Responsive Adjustments */
-        @media (max-width: 480px) {
-            body {
-                padding: 12px;
-            }
-            .header-container {
-                flex-direction: column;
-                gap: 15px;
-                margin-bottom: 20px;
-            }
-            h1.main-header {
-                font-size: 1.5rem;
-                margin: 0;
-            }
-            .nav-container {
-                width: 100%;
-            }
-            .nav-button {
-                width: 100%;
-                text-align: center;
-            }
-            .table-container {
-                padding: 12px;
-                border-radius: 6px;
-            }
-            th, td {
-                padding: 10px 12px;
-                font-size: 0.85rem;
-            }
-            th {
-                font-size: 0.7rem;
-            }
-            .row-delete-indicator {
-                opacity: 1; /* Retain visibility for touchscreen profiles */
-                transform: none;
-            }
-        }
-
-        /* Toast Notification Box */
-        .toast-container {
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            z-index: 1000;
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-            opacity: 1;
-            transform: translateY(0);
-            transition: opacity 0.5s ease, transform 0.5s ease;
-        }
-
-        .toast-container.fade-out {
-            opacity: 0;
-            transform: translateY(-20px);
-        }
-
-        .toast-box {
-            background-color: #2e6557; /* Matches your 'Read' badge green theme */
-            color: #ffffff;
-            padding: 14px 24px;
-            border-radius: 6px;
-            font-size: 0.95rem;
-            font-weight: 500;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-            min-width: 250px;
-            text-align: center;
-        }
-    </style>
 </head>
 <body>
 
     {% if messages %}
         <div id="toast-container" class="toast-container">
             {% for message in messages %}
-                <div class="toast-box {{ message.tags }}">
+                <div class="toast-box">
                     {{ message }}
                 </div>
             {% endfor %}
@@ -271,7 +34,7 @@ td strong {
 
         <div class="header-container">
             <h1 class="main-header">My Library</h1>
-            <div class="nav-container">
+            <div class="nav-container nav-right">
                 <a href="{% url 'search_books' %}" class="nav-button">Add a Book</a>
             </div>
         </div>
@@ -282,29 +45,20 @@ td strong {
                     <tr>
                         <th>Title</th>
                         <th>Author</th>
-                        <th>Translator</th>
                         <th>Publisher</th>
-                        <th>Year Published</th>
-                        <th>Read Status</th>
+                        <th class="col-shrink">Year Published</th>
+                        <th class="col-shrink">Read Status</th>
                     </tr>
                 </thead>
                 <tbody>
-                    {% for book in books %}
-<tr class="clickable-dashboard-row" data-url="{% url 'book_detail' pk=book.pk %}" onclick="navigateToBook(this)">
-                        <td>
-                            <strong style="color: #4a3e3d;">{{ book.title }}</strong>
-                        </td>
+                    <!-- Updated to use page_obj -->
+                    {% for book in page_obj %}
+                    <tr class="clickable-dashboard-row" onclick="window.location.href='{% url 'book_detail' pk=book.pk %}';">
+                        <td><strong style="color: #4a3e3d;">{{ book.title }}</strong></td>
                         <td>{{ book.author }}</td>
-                        <td>
-                            {% if book.translator %}
-                                {{ book.translator }}
-                            {% else %}
-                                <span style="color: #c4bebb;">—</span>
-                            {% endif %}
-                        </td>
                         <td>{{ book.publisher }}</td>
-                        <td>{{ book.year_published }}</td>
-                        <td>
+                        <td class="col-shrink">{{ book.year_published }}</td>
+                        <td class="col-shrink">
                             <div class="status-cell-wrapper">
                                 {% if book.read %}
                                     <span class="status-badge status-read">Read</span>
@@ -314,18 +68,35 @@ td strong {
                                 
                                 <form method="POST" action="{% url 'delete_book' pk=book.pk %}" style="margin: 0; display: inline;" onclick="event.stopPropagation();">
                                     {% csrf_token %}
-                                    <button type="submit" class="row-delete-indicator" onclick="return confirm('Are you sure you want to delete this book?');">ÍÍDelete</button>
+                                    <button type="submit" class="row-delete-indicator" onclick="return confirm('Are you sure you want to delete this book?');">- Delete</button>
                                 </form>
                             </div>
                         </td>
                     </tr>
                     {% empty %}
                     <tr>
-                        <td colspan="6" style="text-align: center; color: #5c534c; padding: 24px;">Your library is completely empty. Click "Add a Book" to start your tracking index.</td>
+                        <td colspan="5" style="text-align: center; color: #5c534c; padding: 24px;">Your library is completely empty. Click "Add a Book" to start your tracking index.</td>
                     </tr>
                     {% endfor %}
                 </tbody>
             </table>
+        </div>
+
+        <!-- Pagination Controls -->
+        <div class="pagination">
+            <span class="step-links">
+                {% if page_obj.has_previous %}
+                    <a href="?page={{ page_obj.previous_page_number }}">Previous</a>
+                {% endif %}
+
+                <span class="current">
+                    Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}
+                </span>
+
+                {% if page_obj.has_next %}
+                    <a href="?page={{ page_obj.next_page_number }}">Next</a>
+                {% endif %}
+            </span>
         </div>
 
     </div> 

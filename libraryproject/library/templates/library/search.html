@@ -1,266 +1,18 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Add a Book</title>
-    <style>
-        /* Base styles & Warm, muted light brown background */
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-            background-color: #f4f0ea; /* Muted light brown / warm sand */
-            color: #333333;
-            margin: 0;
-            padding: 20px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-        }
-
-        /* New outer wrapper to bind widths together */
-        .layout-wrapper {
-            width: 100%;
-            max-width: 900px;
-            display: flex;
-            flex-direction: column;
-        }
-
-        /* Header Row Layout using modern flex alignment */
-        .header-container {
-            display: flex;
-            align-items: center;
-            width: 100%;
-            margin-top: 20px;
-            margin-bottom: 30px;
-        }
-
-        /* Centered Header */
-        h1.main-header {
-            font-size: 1.8rem;
-            color: #4a3e3d;
-            font-weight: 600;
-            letter-spacing: -0.5px;
-            margin: 0;
-            flex-grow: 1;
-            text-align: center;
-            /* Offsets the header text by the button's approximate width for perfect mathematical centering */
-            padding-right: 140px; 
-        }
-
-        /* Navigation Container pulled left and flush with table boundary */
-        .nav-container {
-            display: flex;
-            align-items: center;
-        }
-
-        /* Navigation Button Style */
-        .back-button {
-            text-decoration: none;
-            padding: 10px 20px;
-            font-size: 0.9rem;
-            background-color: #ffffff;
-            color: #4a3e3d;
-            border: 1px solid #e1dcd6;
-            border-radius: 6px;
-            font-weight: 500;
-            transition: background-color 0.2s, border-color 0.2s;
-            white-space: nowrap;
-        }
-
-        .back-button:hover {
-            background-color: #f9f7f5;
-            border-color: #5c534c;
-        }
-
-        /* Search Form Container */
-        .search-container {
-            width: 100%;
-            margin-bottom: 20px;
-            box-sizing: border-box;
-        }
-
-        .search-form {
-            display: flex;
-            gap: 10px;
-        }
-
-        .search-input {
-            flex-grow: 1;
-            padding: 12px 16px;
-            font-size: 0.95rem;
-            border: 1px solid #e1dcd6;
-            border-radius: 6px;
-            background-color: #ffffff;
-            color: #333333;
-            outline: none;
-        }
-
-        .search-input:focus {
-            border-color: #5c534c;
-        }
-
-        .search-button {
-            padding: 12px 24px;
-            font-size: 0.95rem;
-            background-color: #4a3e3d;
-            color: #ffffff;
-            border: none;
-            border-radius: 6px;
-            cursor: pointer;
-            font-weight: 500;
-        }
-
-        .search-button:hover {
-            background-color: #5c534c;
-        }
-
-        /* Main entity container to set the table off from the background */
-        .table-container {
-            background-color: #ffffff;
-            border: 1px solid #e1dcd6;
-            border-radius: 8px;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.04);
-            padding: 24px;
-            width: 100%;
-            box-sizing: border-box;
-            overflow-x: auto;
-            -webkit-overflow-scrolling: touch;
-            margin-bottom: 20px;
-        }
-
-        /* Clean, modernized table design */
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            text-align: left;
-            font-size: 0.95rem;
-        }
-
-        th {
-            background-color: #f9f7f5;
-            color: #5c534c;
-            font-weight: 600;
-            text-transform: uppercase;
-            font-size: 0.75rem;
-            letter-spacing: 0.8px;
-            padding: 14px 16px;
-            border-bottom: 2px solid #e8e3dd;
-            white-space: nowrap; /* Forces header text to stay on a single line */
-        }
-
-        td {
-            padding: 14px 16px;
-            border-bottom: 1px solid #eeebe7;
-            color: #4a4a4a;
-        }
-
-        /* Pattern 1 Additions: Entire Row Interactivity */
-        tbody tr.clickable-row {
-            cursor: pointer;
-            transition: background-color 0.15s ease;
-        }
-
-        tbody tr.clickable-row:hover {
-            background-color: #f4f0ea; /* Matches global layout background highlight */
-        }
-
-        /* Contextual Year/Action cell styling using Grid for exact spacing */
-        .year-cell-wrapper {
-            display: grid;
-            grid-template-columns: auto 1fr;
-            align-items: center;
-            width: 100%;
-        }
-
-        .row-action-indicator {
-            justify-self: center; /* Centers the button perfectly in the available space */
-            font-size: 0.85rem;
-            font-weight: 600;
-            color: #2e6557; /* Muted Green text color */
-            background-color: #e2ece9; /* Muted Green badge background */
-            padding: 2px 8px;
-            border-radius: 4px;
-            opacity: 0;
-            white-space: nowrap;
-            transition: opacity 0.2s ease;
-        }
-
-        tbody tr.clickable-row:hover .row-action-indicator {
-            opacity: 1;
-        }
-
-        /* Pagination / Show More Action Container */
-        .pagination-container {
-            width: 100%;
-            display: flex;
-            justify-content: center;
-            margin-bottom: 40px;
-        }
-
-        .show-more-button {
-            background-color: #ffffff;
-            color: #4a3e3d;
-            border: 1px solid #e1dcd6;
-            padding: 10px 20px;
-            border-radius: 6px;
-            font-size: 0.9rem;
-            font-weight: 500;
-            cursor: pointer;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.02);
-        }
-
-        .show-more-button:hover {
-            background-color: #f9f7f5;
-            border-color: #5c534c;
-        }
-
-        /* iPhone and Mobile Responsive Adjustments */
-        @media (max-width: 480px) {
-            body {
-                padding: 12px;
-            }
-            .header-container {
-                flex-direction: column-reverse;
-                gap: 15px;
-                margin-bottom: 20px;
-            }
-            h1.main-header {
-                font-size: 1.5rem;
-                padding-right: 0;
-            }
-            .nav-container {
-                width: 100%;
-            }
-            .back-button {
-                width: 100%;
-                text-align: center;
-            }
-            .search-form {
-                flex-direction: column;
-            }
-            .table-container {
-                padding: 12px;
-                border-radius: 6px;
-            }
-            th, td {
-                padding: 10px 12px;
-                font-size: 0.85rem;
-            }
-            th {
-                font-size: 0.7rem;
-            }
-            .row-action-indicator {
-                opacity: 1; /* Keep visible on touch screens */
-            }
-        }
-    </style>
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
 </head>
 <body>
 
     <div class="layout-wrapper">
 
-        <div class="header-container">
-            <div class="nav-container">
+        <div class="header-container search-header-reverse">
+            <div class="nav-container nav-left">
                 <a href="{% url 'index' %}" class="back-button">← Back to Library</a>
             </div>
             <h1 class="main-header">Search Open Library</h1>
@@ -274,33 +26,24 @@
             </form>
         </div>
 
-        {% if results %}
+{% if results %}
         <div class="table-container">
             <table>
                 <thead>
                     <tr>
                         <th>Title</th>
                         <th>Author</th>
-                        <th>Translator</th> <th>Publisher</th>
-                        <th>Year Published</th>
+                        <th>Publisher</th>
+                        <th class="col-shrink">Year Published</th>
                     </tr>
                 </thead>
                 <tbody>
                     {% for book in results %}
-                    <tr class="clickable-row" onclick="this.querySelector('form').submit()">
+                    <tr class="clickable-row book-row">
                         <td><strong>{{ book.title }}</strong></td>
                         <td>{{ book.author }}</td>
-                        <td>
-                            {% if "," in book.translator %}
-                                {{ book.translator }}
-                            {% elif book.translator %}
-                                {{ book.translator }}
-                            {% else %}
-                                <span style="color: #c4bebb;">—</span>
-                            {% endif %}
-                        </td>
                         <td>{{ book.publisher }}</td>
-                        <td>
+                        <td class="col-shrink">
                             <div class="year-cell-wrapper">
                                 <span>{{ book.year }}</span>
                                 <span class="row-action-indicator">+ Add</span>
@@ -311,7 +54,6 @@
                                 {% csrf_token %}
                                 <input type="hidden" name="title" value="{{ book.title }}">
                                 <input type="hidden" name="author" value="{{ book.author }}">
-                                <input type="hidden" name="translator" value="{{ book.translator|default:'' }}">
                                 <input type="hidden" name="publisher" value="{{ book.publisher }}">
                                 <input type="hidden" name="year_published" value="{{ book.year }}">
                             </form>
@@ -321,7 +63,6 @@
                 </tbody>
             </table>
         </div>
-
         <div class="pagination-container">
             <form method="GET" action="{% url 'search_books' %}">
                 <input type="hidden" name="q" value="{{ query }}">
@@ -336,5 +77,60 @@
         {% endif %}
 
     </div>
+
+    <script>
+document.querySelectorAll('.book-row').forEach(row => {
+    row.addEventListener('click', function(e) {
+        e.preventDefault(); // Stop any default link or form behavior
+        
+        const form = this.querySelector('form');
+        const formData = new FormData(form);
+
+        // Send the data to views.py in the background
+        fetch(form.action, {
+            method: 'POST',
+            body: formData,
+            headers: {
+                'X-Requested-With': 'XMLHttpRequest'
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            // Trigger the visual pop-up using the returned JSON
+            showToast(data.message, data.status);
+        })
+        .catch(error => console.error('Error:', error));
+    });
+});
+
+// Function to dynamically build your CSS-styled toast
+function showToast(message, status) {
+    // 1. Find or create the main container
+    let container = document.getElementById('toast-container');
+    if (!container) {
+        container = document.createElement('div');
+        container.id = 'toast-container';
+        container.className = 'toast-container';
+        document.body.appendChild(container);
+    }
+
+    // 2. Create the individual toast box
+    const toast = document.createElement('div');
+    // The 'status' variable will be either 'success' or 'warning', mapping to your CSS classes
+    toast.className = `toast-box ${status}`;
+    toast.innerText = message;
+
+    // 3. Add it to the screen
+    container.appendChild(toast);
+
+    // 4. Force the fade-out and removal after 3 seconds
+    setTimeout(() => {
+        toast.style.opacity = '0';
+        toast.style.transform = 'translateY(-20px)';
+        toast.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
+        setTimeout(() => toast.remove(), 500);
+    }, 3000);
+}
+</script>
 </body>
 </html>

@@ -1,215 +1,11 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{{ book.title }} - Details</title>
-    <style>
-        /* Base styles & Warm, muted light brown background */
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-            background-color: #f4f0ea; /* Muted light brown / warm sand */
-            color: #333333;
-            margin: 0;
-            padding: 20px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-        }
-
-        /* New outer wrapper to bind widths together */
-        .layout-wrapper {
-            width: 100%;
-            max-width: 600px; /* Narrower layout container for a clean form card look */
-            display: flex;
-            flex-direction: column;
-        }
-
-        /* Header Row Layout using modern flex alignment */
-        .header-container {
-            display: flex;
-            align-items: center;
-            width: 100%;
-            margin-top: 20px;
-            margin-bottom: 30px;
-        }
-
-        /* Centered Header */
-        h1.main-header {
-            font-size: 1.6rem;
-            color: #4a3e3d;
-            font-weight: 600;
-            letter-spacing: -0.5px;
-            margin: 0;
-            flex-grow: 1;
-            text-align: center;
-            padding-right: 140px; /* Offsets text by the button width for centering */
-        }
-
-        /* Navigation Container pulled left and flush with table boundary */
-        .nav-container {
-            display: flex;
-            align-items: center;
-        }
-
-        /* Navigation Button Style */
-        .back-button {
-            text-decoration: none;
-            padding: 10px 20px;
-            font-size: 0.9rem;
-            background-color: #ffffff;
-            color: #4a3e3d;
-            border: 1px solid #e1dcd6;
-            border-radius: 6px;
-            font-weight: 500;
-            transition: background-color 0.2s, border-color 0.2s;
-            white-space: nowrap;
-        }
-
-        .back-button:hover {
-            background-color: #f9f7f5;
-            border-color: #5c534c;
-        }
-
-        /* Form Container Box styling matching your central table theme */
-        .form-container {
-            background-color: #ffffff;
-            border: 1px solid #e1dcd6;
-            border-radius: 8px;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.04);
-            padding: 30px;
-            box-sizing: border-box;
-            margin-bottom: 40px;
-        }
-
-        /* Input alignment rules */
-        .form-group {
-            display: flex;
-            flex-direction: column;
-            gap: 6px;
-            margin-bottom: 20px;
-        }
-
-        .form-group label {
-            font-size: 0.75rem;
-            font-weight: 600;
-            text-transform: uppercase;
-            color: #5c534c;
-            letter-spacing: 0.8px;
-        }
-
-        .form-input {
-            padding: 12px 16px;
-            font-size: 0.95rem;
-            border: 1px solid #e1dcd6;
-            border-radius: 6px;
-            background-color: #ffffff;
-            color: #333333;
-            outline: none;
-        }
-
-        .form-input:focus {
-            border-color: #5c534c;
-        }
-
-        /* Specialized design for checkbox container mapping to status badges */
-        .checkbox-group {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            margin-top: 10px;
-            margin-bottom: 25px;
-        }
-
-        .checkbox-group label {
-            font-size: 0.95rem;
-            font-weight: 500;
-            color: #4a4a4a;
-            cursor: pointer;
-        }
-
-        .checkbox-input {
-            width: 18px;
-            height: 18px;
-            accent-color: #4a3e3d;
-            cursor: pointer;
-        }
-
-        /* Form submission button element */
-        .save-button {
-            width: 100%;
-            padding: 14px;
-            font-size: 0.95rem;
-            background-color: #4a3e3d;
-            color: #ffffff;
-            border: none;
-            border-radius: 6px;
-            cursor: pointer;
-            font-weight: 600;
-            transition: background-color 0.2s;
-        }
-
-        .save-button:hover {
-            background-color: #5c534c;
-        }
-
-        /* Toast Popup Notification Styles */
-        .toast-container {
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            z-index: 1000;
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-            opacity: 1;
-            transform: translateY(0);
-            transition: opacity 0.5s ease, transform 0.5s ease;
-        }
-
-        .toast-container.fade-out {
-            opacity: 0;
-            transform: translateY(-20px);
-        }
-
-        .toast-box {
-            background-color: #2e6557;
-            color: #ffffff;
-            padding: 14px 24px;
-            border-radius: 6px;
-            font-size: 0.95rem;
-            font-weight: 500;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-            min-width: 250px;
-            text-align: center;
-        }
-
-        /* iPhone and Mobile Responsive Adjustments */
-        @media (max-width: 480px) {
-            body {
-                padding: 12px;
-            }
-            .header-container {
-                flex-direction: column-reverse;
-                gap: 15px;
-                margin-bottom: 20px;
-            }
-            h1.main-header {
-                font-size: 1.4rem;
-                padding-right: 0;
-            }
-            .nav-container {
-                width: 100%;
-            }
-            .back-button {
-                width: 100%;
-                text-align: center;
-            }
-            .form-container {
-                padding: 20px;
-            }
-        }
-    </style>
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
 </head>
 <body>
 
@@ -232,10 +28,8 @@
         </script>
     {% endif %}
 
-    <div class="layout-wrapper">
-
-        <div class="header-container">
-            <div class="nav-container">
+    <div class="layout-wrapper" style="max-width: 600px;"> <div class="header-container search-header-reverse">
+            <div class="nav-container nav-left">
                 <a href="{% url 'index' %}" class="back-button">← Library</a>
             </div>
             <h1 class="main-header">Edit Book Details</h1>
@@ -256,11 +50,6 @@
                 </div>
 
                 <div class="form-group">
-                    <label for="translator">Translator</label>
-                    <input type="text" id="translator" name="translator" class="form-input" value="{{ book.translator|default:'' }}">
-                </div>
-
-                <div class="form-group">
                     <label for="publisher">Publisher</label>
                     <input type="text" id="publisher" name="publisher" class="form-input" value="{{ book.publisher }}">
                 </div>
@@ -268,6 +57,11 @@
                 <div class="form-group">
                     <label for="year_published">Year Published</label>
                     <input type="number" id="year_published" name="year_published" class="form-input" value="{{ book.year_published }}">
+                </div>
+
+                <div class="form-group">
+                    <label for="notes">Book Notes</label>
+                    <textarea id="notes" name="notes" class="form-input" rows="5" style="resize: vertical; font-family: inherit;" placeholder="Enter specific edition data, translation records, or personal thoughts...">{{ book.notes|default:'' }}</textarea>
                 </div>
 
                 <div class="checkbox-group">
@@ -280,6 +74,5 @@
         </div>
 
     </div>
-
 </body>
 </html>
